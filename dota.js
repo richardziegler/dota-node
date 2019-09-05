@@ -1,16 +1,20 @@
 const readline = require("readline").createInterface({
-  input: process.stdin,
-  output: process.stdout
+    input: process.stdin,
+    output: process.stdout
 });
 
-const axios = require("axios");
+const controller = require("./SteamController.js")
 
-const steamAPIKey = "xxxx";
+const dotenv = require('dotenv');
+dotenv.config();
+
+const steamAPIKey = process.env.STEAM_API_KEY;
 // const openDotaApiKey = 'xxxx';
-let steamUsername = "";
+
+let steam32 = 0;
 
 console.log(
-  "   ___  ____  _________     ___  ___  ____  __________   ____\n" +
+    "   ___  ____  _________     ___  ___  ____  __________   ____\n" +
     "  / _ \\/ __ \\/_  __/ _ |   / _ \\/ _ \\/ __ \\/ __/  _/ /  / __/\n" +
     " / // / /_/ / / / / __ |  / ___/ , _/ /_/ / _/_/ // /__/ _/  \n" +
     "/____/\\____/ /_/ /_/ |_| /_/  /_/|_|\\____/_/ /___/____/___/  \n" +
@@ -18,17 +22,6 @@ console.log(
 );
 
 readline.question(`What is your Steam username?`, name => {
-  steamUsername = name;
+    controller.getSteamUserID(steamAPIKey, name).then(res => console.log(res))
+    // controller.getCatFact().then(vars => console.log(vars))
 });
-
-let getSteamId = axios
-  .get(
-    `http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${steamAPIKey}&vanityurl=${steamUsername}`
-  )
-  .then(function(response) {
-    console.log(response.data);
-  })
-  .catch(function(error) {
-    console.log("error: " + error);
-  })
-  .finally(function() {});
